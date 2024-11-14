@@ -63,7 +63,7 @@ private class OpportunityTeamServiceTest {
         Opportunity testOpp = [SELECT Id FROM Opportunity WHERE Name = 'Test Opportunity'];
         
         Test.startTest();
-        OpportunityTeamService.addTeamMember(testOpp.Id, testUser.Id, 'Sales Rep');
+        OpportunityTeamService.addTeamMember(testOpp.Id, testUser.Id, 'Sales Rep', 'Read');
         Test.stopTest();
         
         List<OpportunityTeamMember> members = [SELECT Id FROM OpportunityTeamMember WHERE OpportunityId = :testOpp.Id];
