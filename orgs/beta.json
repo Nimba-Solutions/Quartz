@@ -8,6 +8,9 @@
     "chatterSettings": {
       "enableChatter": true
     },
+    "opportunitySettings": {
+      "enableOpportunityTeam": true
+    },
     "userManagementSettings": {
       "enableNewProfileUI": true
     },
@@ -16,5 +19,6 @@
       "sessionSettings": {
         "forceRelogin": false
       }
-    }  }
+    }
+  }
 }
