@@ -1,0 +1,59 @@
+<template>
+    <lightning-card>
+        <div class="slds-p-horizontal_medium">
+            <lightning-input
+                type="search"
+                label="Search Users"
+                value={searchTerm}
+                onchange={handleSearchChange}
+                placeholder="Search users to add to opportunity team..."
+            ></lightning-input>
+            <div class="dropdown-container" tabindex="0"> 
+                <div if:true={showUserList} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid">
+                    <ul class="slds-listbox slds-listbox_vertical">
+                        <template for:each={userResults} for:item="user">
+                            <li key={user.Id} class="slds-listbox__item">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_entity">
+                                    <span class="slds-media__figure">
+                                        <lightning-avatar
+                                            src={user.SmallPhotoUrl}
+                                            fallback-icon-name="standard:user"
+                                            alternative-text={user.Name}
+                                            class="slds-avatar_small">
+                                        </lightning-avatar>
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-listbox__option-text">{user.Name}</span>
+                                        <div class="role-buttons">
+                                            <lightning-input 
+                                                type="checkbox"
+                                                label="Edit Access"
+                                                data-userid={user.Id}
+                                                onchange={handleAccessChange}
+                                                class="access-checkbox">
+                                            </lightning-input>
+                                            <template for:each={roles} for:item="role">
+                                                <lightning-button 
+                                                    key={role.Id}
+                                                    label={role.Name}
+                                                    data-userid={user.Id}
+                                                    data-role={role.Name}
+                                                    onclick={handleRoleSelect}
+                                                    variant="neutral"
+                                                    class="role-button">
+                                                </lightning-button>
+                                            </template>
+                                        </div>
+                                    </span>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-pill-container items={teamMemberPills} onitemremove={handleRemoveTeamMember}></lightning-pill-container>
+            </div>
+        </div>
+    </lightning-card>
+</template>

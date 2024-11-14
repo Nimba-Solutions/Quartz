@@ -1,0 +1,34 @@
+.role-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    align-items: center;
+    height: 100%;
+}
+
+.role-button {
+    --sds-c-button-neutral-color-background: transparent;
+    --sds-c-button-text-color: #706e6b;
+    --sds-c-button-neutral-spacing-inline-start: 0.5rem;
+    --sds-c-button-neutral-spacing-inline-end: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    min-height: 1.625rem;
+}
+
+.slds-media__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-container {
+	max-width: 80%;
+	min-width: 80%;
+    position: relative;
+    padding: 0;
+}
+
+.slds-listbox__option {
+    padding-left: var(--lwc-spacingSmall);
+}
