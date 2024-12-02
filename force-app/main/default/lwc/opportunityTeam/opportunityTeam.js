@@ -39,7 +39,6 @@ export default class OpportunityTeam extends LightningElement {
       type: "avatar",
       label: `${member.User.Name} (${member.TeamMemberRole})`,
       name: member.Id,
-      src: member.User.SmallPhotoUrl,
       fallbackIconName: "standard:user",
       variant: "circle",
       alternativeText: "User avatar",
@@ -71,12 +70,20 @@ export default class OpportunityTeam extends LightningElement {
 
   handleAccessChange(event) {
     const userId = event.target.dataset.userid;
-    this.userAccessLevels.set(userId, event.target.checked ? "Edit" : "Read");
+    const isChecked = event.target.checked;
+    this.userAccessLevels.set(userId, isChecked ? "Edit" : "Read");
+    this.userResults = this.userResults.map((user) =>
+      user.Id === userId ? { ...user, hasEditAccess: isChecked } : user
+    );
   }
 
   async searchUsers() {
     try {
       this.userResults = await searchUsers({ searchTerm: this.searchTerm });
+      this.userResults = this.userResults.map((user) => ({
+        ...user,
+        hasEditAccess: this.userAccessLevels.get(user.Id) === "Edit",
+      }));
     } catch (error) {
       console.error("Error searching users:", error);
       this.userResults = [];
@@ -86,8 +93,8 @@ export default class OpportunityTeam extends LightningElement {
   async handleRoleSelect(event) {
     const userId = event.currentTarget.dataset.userid;
     const teamRole = event.currentTarget.dataset.role;
-    const accessLevel = this.userAccessLevels.get(userId) || "Read";
-
+    const accessLevel = this.userAccessLevels.get(userId) || "Edit";
+  
     if (this.teamMembers.length >= 2) {
       this.dispatchEvent(
         new ShowToastEvent({
@@ -98,7 +105,7 @@ export default class OpportunityTeam extends LightningElement {
       );
       return;
     }
-
+  
     const existingRole = this.teamMembers.find(
       (member) => member.TeamMemberRole === teamRole
     );
@@ -112,7 +119,7 @@ export default class OpportunityTeam extends LightningElement {
       );
       return;
     }
-
+  
     try {
       await addTeamMember({
         opportunityId: this.recordId,
@@ -120,7 +127,7 @@ export default class OpportunityTeam extends LightningElement {
         teamRole: teamRole,
         accessLevel: accessLevel,
       });
-
+  
       this.dispatchEvent(
         new ShowToastEvent({
           title: "Success",
@@ -128,7 +135,7 @@ export default class OpportunityTeam extends LightningElement {
           variant: "success",
         })
       );
-
+  
       await refreshApex(this.wiredTeamMembersResult);
       this.showUserList = false;
       this.searchTerm = "";
