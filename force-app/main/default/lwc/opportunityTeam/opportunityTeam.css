@@ -8,7 +8,7 @@
 
 .role-button {
     --sds-c-button-neutral-color-background: transparent;
-    --sds-c-button-text-color: #706e6b;
+    --sds-c-button-text-color: #7086eb;
     --sds-c-button-neutral-spacing-inline-start: 0.5rem;
     --sds-c-button-neutral-spacing-inline-end: 0.5rem;
     font-size: 0.75rem;
@@ -16,19 +16,48 @@
     min-height: 1.625rem;
 }
 
+.slds-media__figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+}
+
 .slds-media__body {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.25rem;
+    flex-grow: 1;
+    margin-left: 0.5rem;
+}
+
+.slds-media {
+    display: flex;
     align-items: center;
 }
 
 .dropdown-container {
-	max-width: 80%;
-	min-width: 80%;
+    max-width: 100%;
+    min-width: 100%;
     position: relative;
     padding: 0;
 }
 
 .slds-listbox__option {
     padding-left: var(--lwc-spacingSmall);
+}
+
+.slds-card__header {
+    padding: 0.75rem 1rem;
+}
+
+.slds-card__body_inner {
+    padding: 1rem;
+}
+
+.slds-card__header-title {
+    font-weight: bold;
+    font-size: 1rem;
 }
