@@ -39,7 +39,6 @@ export default class OpportunityTeam extends LightningElement {
       type: "avatar",
       label: `${member.User.Name} (${member.TeamMemberRole})`,
       name: member.Id,
-      src: member.User.SmallPhotoUrl,
       fallbackIconName: "standard:user",
       variant: "circle",
       alternativeText: "User avatar",
@@ -71,47 +70,36 @@ export default class OpportunityTeam extends LightningElement {
 
   handleAccessChange(event) {
     const userId = event.target.dataset.userid;
-    this.userAccessLevels.set(userId, event.target.checked ? "Edit" : "Read");
+    const isChecked = event.target.checked;
+    this.userAccessLevels.set(userId, isChecked ? "Edit" : "Read");
+    this.userResults = this.userResults.map((user) =>
+      user.Id === userId ? { ...user, hasEditAccess: isChecked } : user
+    );
   }
 
   async searchUsers() {
     try {
-      this.userResults = await searchUsers({ searchTerm: this.searchTerm });
+        const results = await searchUsers({ searchTerm: this.searchTerm });
+
+        this.userResults = results.map((user) => {
+            if (!this.userAccessLevels.has(user.Id)) {
+                this.userAccessLevels.set(user.Id, "Edit");
+            }
+            return {
+                ...user,
+                hasEditAccess: this.userAccessLevels.get(user.Id) === "Edit",
+            };
+        });
     } catch (error) {
-      console.error("Error searching users:", error);
-      this.userResults = [];
+        console.error("Error searching users:", error);
+        this.userResults = [];
     }
   }
 
   async handleRoleSelect(event) {
     const userId = event.currentTarget.dataset.userid;
     const teamRole = event.currentTarget.dataset.role;
-    const accessLevel = this.userAccessLevels.get(userId) || "Read";
-
-    if (this.teamMembers.length >= 2) {
-      this.dispatchEvent(
-        new ShowToastEvent({
-          title: "Error",
-          message: "Maximum team members limit reached (2)",
-          variant: "error",
-        })
-      );
-      return;
-    }
-
-    const existingRole = this.teamMembers.find(
-      (member) => member.TeamMemberRole === teamRole
-    );
-    if (existingRole) {
-      this.dispatchEvent(
-        new ShowToastEvent({
-          title: "Error",
-          message: "This role is already assigned to another team member",
-          variant: "error",
-        })
-      );
-      return;
-    }
+    const accessLevel = this.userAccessLevels.get(userId) || "Edit";
 
     try {
       await addTeamMember({
@@ -121,6 +109,9 @@ export default class OpportunityTeam extends LightningElement {
         accessLevel: accessLevel,
       });
 
+      // Refresh the data without clearing it first
+      await refreshApex(this.wiredTeamMembersResult);
+
       this.dispatchEvent(
         new ShowToastEvent({
           title: "Success",
@@ -129,7 +120,7 @@ export default class OpportunityTeam extends LightningElement {
         })
       );
 
-      await refreshApex(this.wiredTeamMembersResult);
+      // Clear UI state
       this.showUserList = false;
       this.searchTerm = "";
       this.userResults = [];
@@ -151,6 +142,8 @@ export default class OpportunityTeam extends LightningElement {
 
     try {
       await removeTeamMember({ memberId });
+      
+      // Refresh the data
       await refreshApex(this.wiredTeamMembersResult);
 
       this.dispatchEvent(
