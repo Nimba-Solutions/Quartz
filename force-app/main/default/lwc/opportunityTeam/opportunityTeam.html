@@ -1,48 +1,62 @@
 <template>
-    <lightning-card>
-        <div class="slds-p-horizontal_medium">
+    <div class="slds-card">
+        <header class="slds-card__header slds-grid">
+            <div class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="standard:team_member" alternative-text="Opportunity Team" size="small"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>Opportunity Team</span>
+                    </h2>
+                </div>
+            </div>
+        </header>
+        <div class="slds-card__body slds-card__body_inner">
             <lightning-input
                 type="search"
                 label="Search Users"
                 value={searchTerm}
                 onchange={handleSearchChange}
-                placeholder="Search users to add to opportunity team..."
-            ></lightning-input>
-            <div class="dropdown-container" tabindex="0"> 
+                placeholder="Search users to add to opportunity team...">
+            </lightning-input>
+            <div class="dropdown-container" tabindex="0">
                 <div if:true={showUserList} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid">
                     <ul class="slds-listbox slds-listbox_vertical">
                         <template for:each={userResults} for:item="user">
                             <li key={user.Id} class="slds-listbox__item">
                                 <div class="slds-media slds-listbox__option slds-listbox__option_entity">
                                     <span class="slds-media__figure">
-                                        <lightning-avatar
-                                            src={user.SmallPhotoUrl}
-                                            fallback-icon-name="standard:user"
+                                        <lightning-icon
+                                            icon-name="standard:user"
                                             alternative-text={user.Name}
-                                            class="slds-avatar_small">
-                                        </lightning-avatar>
+                                            size="small">
+                                        </lightning-icon>
                                     </span>
                                     <span class="slds-media__body">
                                         <span class="slds-listbox__option-text">{user.Name}</span>
                                         <div class="role-buttons">
-                                            <lightning-input 
-                                                type="checkbox"
-                                                label="Edit Access"
-                                                data-userid={user.Id}
-                                                onchange={handleAccessChange}
-                                                class="access-checkbox">
-                                            </lightning-input>
-                                            <template for:each={roles} for:item="role">
-                                                <lightning-button 
-                                                    key={role.Id}
-                                                    label={role.Name}
+                                            <div class="access-checkbox-container">
+                                                <lightning-input 
+                                                    type="checkbox"
+                                                    label="Edit Access"
                                                     data-userid={user.Id}
-                                                    data-role={role.Name}
-                                                    onclick={handleRoleSelect}
-                                                    variant="neutral"
-                                                    class="role-button">
-                                                </lightning-button>
-                                            </template>
+                                                    onchange={handleAccessChange}
+                                                    class="access-checkbox"
+                                                    checked={user.hasEditAccess}>
+                                                </lightning-input>
+                                                <template for:each={roles} for:item="role">
+                                                    <lightning-button 
+                                                        key={role.Id}
+                                                        label={role.Name}
+                                                        data-userid={user.Id}
+                                                        data-role={role.Name}
+                                                        onclick={handleRoleSelect}
+                                                        variant="neutral"
+                                                        class="role-button">
+                                                    </lightning-button>
+                                                </template>
+                                            </div>
                                         </div>
                                     </span>
                                 </div>
@@ -52,8 +66,11 @@
                 </div>
             </div>
             <div class="slds-m-top_medium">
-                <lightning-pill-container items={teamMemberPills} onitemremove={handleRemoveTeamMember}></lightning-pill-container>
+                <lightning-pill-container
+                    items={teamMemberPills}
+                    onitemremove={handleRemoveTeamMember}>
+                </lightning-pill-container>
             </div>
         </div>
-    </lightning-card>
+    </div>
 </template>
