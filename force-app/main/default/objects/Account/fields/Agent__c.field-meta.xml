@@ -14,7 +14,7 @@
         <isOptional>false</isOptional>
     </lookupFilter>
     <referenceTo>Contact</referenceTo>
-    <relationshipLabel>Accounts</relationshipLabel>
+    <relationshipLabel>Accounts (Agent)</relationshipLabel>
     <relationshipName>Agent_Accounts</relationshipName>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
