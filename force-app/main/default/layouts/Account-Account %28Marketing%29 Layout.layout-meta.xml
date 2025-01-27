@@ -53,6 +53,10 @@
                 <behavior>Edit</behavior>
                 <field>Quartz_License__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>HealthCloudGA_Active__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
